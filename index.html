@@ -1,0 +1,94 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Untitled Document</title>
+    <script src="https://d3js.org/d3.v3.min.js"></script>
+</head>
+
+<body>
+    <input type="button" onclick="update()" value="新增">
+    <script>
+        var arr = [85, 60, 99, 49, 77, 82];
+        var w = 900;
+        var h = 500;
+        var p = 100;
+
+
+        svg(w, h)
+        bind(arr);
+        render(w, h, p);
+
+        function svg(width, height) {
+            d3.select("body").append("svg").attr({
+                width: width,
+                height: height
+            })
+        }
+
+        function bind(data) {
+            var selection = d3.select("svg")
+                .selectAll("rect")
+                .data(data);
+            selection.enter().append("rect");
+            selection.exit().remove();
+
+            var selection_text = d3.select("svg")
+                .selectAll("text")
+                .data(data);
+            selection.enter().append("text");
+            selection.exit().remove();
+
+        }
+
+        function render(width, height, padding) {
+            d3.selectAll("rect").attr({
+                x: function (d, i) {
+                    return padding + 42 * i
+                },
+                y: function (d, i) {
+                    return height - padding - d;
+                },
+                width: 40,
+                height: function (d, i) {
+                    return d;
+                },
+                fill: function (d) {
+                    if (d < 70) {
+                        return "red";
+                    } else {
+                        return "lightgreen";
+                    }
+                }
+
+            });
+            d3.selectAll("text").attr({ //此text與下面.text不同，此text是一個標籤
+                x: function (d, i) {
+                    return 10 + padding + 42 * i
+                },
+                y: height - padding + 15,
+
+            }).text(function (d) {
+                return d;
+            });
+
+
+        }
+
+        function update() {
+            arr.push(random(20, 100));
+            //console.log(arr);
+            bind(arr);
+            render(w, h, p);
+
+        }
+
+        function random(n, m) {
+            return Math.ceil(Math.random() * (m - n) + n);
+        }
+    </script>
+
+</body>
+
+</html>
